@@ -1,3 +1,48 @@
+Introduction:
+
+The ns-3 simulator is a discrete-event network simulator targeted primarily for research and educational use. 
+The ns-3 project, started in 2006, is an open-source project developing ns-3.
+
+The purpose of this tutorial is to introduce new ns-3 users to the system in a structured way. It is sometimes difficult
+for new users to glean essential information from detailed manuals and to convert this information into working simulations. 
+In this tutorial, we will build several example simulations, introducing and explaining key concepts and features as we go.
+
+As the tutorial unfolds, we will introduce the full ns-3 documentation and provide pointers to source code for those 
+interested in delving deeper into the workings of the system.
+
+A few key points are worth noting at the onset:
+
+ns-3 is open-source, and the project strives to maintain an open environment for researchers to contribute and share their
+software.
+ns-3 is not a backwards-compatible extension of ns-2; it is a new simulator. The two simulators are both written in C++
+but ns-3 is a new simulator that does not support the ns-2 APIs.
+
+About ns-3:
+
+ns-3 has been developed to provide an open, extensible network simulation platform, for networking research and education.
+In brief, ns-3 provides models of how packet data networks work and perform, and provides a simulation engine for users to
+conduct simulation experiments. Some of the reasons to use ns-3 include to perform studies that are more difficult or not
+possible to perform with real systems, to study system behavior in a highly controlled, reproducible environment, and to
+learn about how networks work. Users will note that the available model set in ns-3 focuses on modeling how Internet
+protocols and networks work, but ns-3 is not limited to Internet systems; several users are using ns-3 to model
+non-Internet-based systems.
+
+Many simulation tools exist for network simulation studies. Below are a few distinguishing features of ns-3 in contrast 
+to other tools.
+
+ns-3 is designed as a set of libraries that can be combined together and also with other external software libraries. 
+While some simulation platforms provide users with a single, integrated graphical user interface environment in which all
+tasks are carried out, ns-3 is more modular in this regard. Several external animators and data analysis and visualization
+tools can be used with ns-3. However, users should expect to work at the command line and with C++ and/or Python software 
+development tools.
+ns-3 is primarily used on Linux or macOS systems, although support exists for BSD systems and also for Windows frameworks
+that can build Linux code, such as Windows Subsystem for Linux, or Cygwin. Native Windows Visual Studio is not presently
+supported although a developer is working on future support. Windows users may also use a Linux virtual machine.
+ns-3 is not an officially supported software product of any company. Support for ns-3 is done on a best-effort basis on 
+the ns-3-users forum (ns-3-users@googlegroups.com).
+
+Task:
+
 Use socket programming to implement a simple client and server that communicate over the network and
 implement a simple application involving Cash Registers. The client implements a simple cash register that
 opens a session with the server and then supplies a sequence of codes (refer request-response messages
