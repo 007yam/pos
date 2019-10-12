@@ -642,5 +642,77 @@ void partB() {
 	Config::Connect(sink, MakeBoundCallback(&packet_callback, stream3_goodput, 0));
 	sink_ = "/NodeList/7/$ns3::Ipv4L3Protocol/Rx";
 	Config::Connect(sink_, MakeBoundCallback(&IPV4packet_callback, stream3_throughput, 0));
+	
+	//Turning on Static Global Routing
+	Ipv4GlobalRoutingHelper::PopulateRoutingTables();
+	Ptr<FlowMonitor> flowmon1;
+	FlowMonitorHelper flowmonHelper;
+	flowmon1 = flowmonHelper.InstallAll();
+	Simulator::Stop(Seconds(durationGap+otherFlowStart));
+	Simulator::Run();
+	flowmon1->CheckForLostPackets();
+	Ptr<Ipv4FlowClassifier> classifier = DynamicCast<Ipv4FlowClassifier>(flowmonHelper.GetClassifier());
+	std::map<FlowId, FlowMonitor::FlowStats> stats = flowmon1->GetFlowStats();
+	std::cout << ".................." << std::endl;
+	for (std::map<FlowId, FlowMonitor::FlowStats>::const_iterator i = stats.begin(); i != stats.end(); ++i) 
+	{
+		Ipv4FlowClassifier::FiveTuple t = classifier->FindFlow (i->first);
+		std::cout << "..."<<std::endl;
+		if(t.sourceAddress == "10.1.1.1") 
+		{
+			if(mapDrop.find(1)==mapDrop.end())
+				mapDrop[1] = 0;
+			*stream1_congestion_loss->GetStream() << "TcpHybla Flow " << i->first  << " sender:" << t.sourceAddress << ", receiver: " << t.destinationAddress << "\n";
+			std::cout << "......"<< std::endl;
+			*stream1_congestion_loss->GetStream()  << "Net Packets Lost: " << i->second.lostPackets << "\n";
+			std::cout << "........."<<std::endl;
+			*stream1_congestion_loss->GetStream()  << "Packet Loss due to buffer overflow: " << mapDrop[1] << "\n";
+			std::cout << "............"<<std::endl;
+			*stream1_congestion_loss->GetStream()  << "Packet Loss due to Congestion: " << i->second.lostPackets - mapDrop[1] << "\n";
+			std::cout << "..............."<<std::endl;		
+			*stream1_congestion_loss->GetStream() << "Max throughput: " << mapMaxThroughput["/NodeList/5/$ns3::Ipv4L3Protocol/Rx"] << std::endl;
+			std::cout << ".................."<<std::endl;
+		}
+		else if(t.sourceAddress == "10.1.2.1") 
+		{
+			if(mapDrop.find(2)==mapDrop.end())
+				mapDrop[2] = 0;
+			*stream2_congestion_loss->GetStream() << "TcpWestwoodPlus Flow " << i->first  << " sender:" << t.sourceAddress << ", receiver: " << t.destinationAddress << "\n";
+			std::cout << "......"<< std::endl;
+			*stream2_congestion_loss->GetStream()  << "Net Packets Lost: " << i->second.lostPackets << "\n";
+			std::cout << "........."<<std::endl;
+			*stream2_congestion_loss->GetStream()  << "Packet Loss due to buffer overflow: " << mapDrop[2] << "\n";
+			std::cout << "............"<<std::endl;
+			*stream2_congestion_loss->GetStream()  << "Packet Loss due to Congestion: " << i->second.lostPackets - mapDrop[2] << "\n";
+			std::cout << "..............."<<std::endl;
+			*stream2_congestion_loss->GetStream() << "Max throughput: " << mapMaxThroughput["/NodeList/6/$ns3::Ipv4L3Protocol/Rx"] << std::endl;
+			std::cout << ".................."<<std::endl;
+		} 
+		else if(t.sourceAddress == "10.1.3.1") 
+		{
+			if(mapDrop.find(3)==mapDrop.end())
+				mapDrop[3] = 0;
+			*stream3_congestion_loss->GetStream() << "TcpYeAH Flow " << i->first  <<" sender:" << t.sourceAddress << ", receiver: " << t.destinationAddress << "\n";
+			std::cout << "......"<<std::endl;
+			*stream3_congestion_loss->GetStream()  << "Net Packets Lost: " << i->second.lostPackets << "\n";
+			std::cout << "........."<<std::endl;
+			*stream3_congestion_loss->GetStream()  << "Packet Loss due to buffer overflow: " << mapDrop[3] << "\n";
+			std::cout << "............"<<std::endl;
+			*stream3_congestion_loss->GetStream()  << "Packet Loss due to Congestion: " << i->second.lostPackets - mapDrop[3] << "\n";
+			std::cout << "..............."<<std::endl;
+			*stream3_congestion_loss->GetStream() << "Max throughput: " << mapMaxThroughput["/NodeList/7/$ns3::Ipv4L3Protocol/Rx"] << std::endl;
+			std::cout << ".................."<<std::endl;
+		}
+	}
+	std::cout << "Simulation completed" << std::endl;
+	Simulator::Destroy();
+}
+
+int main (int argc, char *argv[])
+{
+	partA(); // single flow at a time
+	//partB(); // first flow starts, then other two flows start simultaneously
+}
+
 
 
